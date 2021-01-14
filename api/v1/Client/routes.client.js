@@ -10,7 +10,7 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
-  const client = getOneClient(id);
+  const client = await getOneClient(id);
   res.send(client);
 });
 
@@ -18,10 +18,10 @@ router.post("/", async (req, res, next) => {
   const { client } = req.body;
   try {
     const newClient = await addClient(client);
+    res.send(newClient);
   } catch (err) {
     next(err);
   }
-  res.send(newClient);
 });
 
 export default router;

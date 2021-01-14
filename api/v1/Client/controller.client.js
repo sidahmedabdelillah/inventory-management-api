@@ -11,6 +11,7 @@ export const getAllClients = async () => {
 
 export const getOneClient = async (id) => {
   const client = await Client.findByPk(id);
+  console.log(client);
   return client;
 };
 

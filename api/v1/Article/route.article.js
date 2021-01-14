@@ -1,17 +1,39 @@
-const router = require("express").Router();
-const Article = require("./model.article");
+import express from "express";
+const router = express.Router();
 
-const { addArticle } = require("./controller.article");
+import {
+  getAllArticles,
+  getOneArticle,
+  createArticle,
+} from "./controller.article.js";
 
-router.get("/", (req, res) => {
-  const articles = Article.findAll();
-  res.send(articles);
+router.get("/", async (req, res, next) => {
+  try {
+    const articles = await getAllArticles();
+    res.send(articles);
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.post("/", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const article = await getOneArticle(id);
+    res.send(article);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/", async (req, res, next) => {
   const { article } = req.body;
-  const created = await addArticle(article);
-  res.send(created);
+  try {
+    const created = await createArticle(article);
+    res.send(created);
+  } catch (error) {
+    next(error);
+  }
 });
 
-module.exports = router;
+export default router;

@@ -1,11 +1,21 @@
-const { Sequelize, DataTypes } = require("sequelize");
-const Article = require("./model.article");
+import sequelize from '../../../db/sequelize.js';
 
-const addArticle = async (article) => {
-  const created = await Article.create(article);
-  return created;
+import { articleSchema } from './validoator.article.js';
+
+const { Article, Famille } = sequelize.models;
+
+export const getAllArticles = async () => {
+  const articles = await Article.findAll({ include: Famille });
+  return articles;
 };
 
-module.exports = {
-  addArticle,
+export const getOneArticle = async (id) => {
+  const article = await Article.findByPk(id);
+  return article;
+};
+
+export const createArticle = async (article) => {
+  await articleSchema.validateAsync(article);
+  const created = await Article.create(article);
+  return article;
 };
